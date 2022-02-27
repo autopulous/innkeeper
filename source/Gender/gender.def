@@ -1,0 +1,8 @@
+;This defintion file declares the API for the Neoheurist character gender processor
+
+LIBRARY
+
+VERSION 1.0
+
+EXPORTS
+   StringToEnum
