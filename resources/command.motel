@@ -1,0 +1,19 @@
+::Command grammar
+::
+::[VERB][[[ARTICLE][ADJECTIVE] NOUN][PREPOSITION][[ARTICLE][ADJECTIVE] NOUN]]
+::
+:.Action:
+:.Action.Adverb:
+:.Action.Verb:
+::
+:.DirectObject:
+:.DirectObject.Article:
+:.DirectObject.Adjective:
+:.DirectObject.Noun:
+::
+:.Preposition:
+::
+:.IndirectObject:
+:.IndirectObject.Article:
+:.IndirectObject.Adjective:
+:.IndirectObject.Noun:

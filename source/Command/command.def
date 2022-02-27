@@ -1,0 +1,11 @@
+;This defintion file declares the API for the Neoheurist command line processor
+
+LIBRARY
+
+VERSION 1.0
+
+EXPORTS
+   AllocateCommandProcessor
+   GetCommand
+   TokenizeCommand
+   ParseTokenizedCommand

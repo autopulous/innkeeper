@@ -1,0 +1,12 @@
+:This defintion file must be used to build all rules that are to be attached to a Neoheurist engine
+
+LIBRARY
+
+VERSION 1.0
+
+EXPORTS
+   RuleConstructor @1
+   RuleDestructor @2
+   RuleValidator @3
+   RuleDescriber @4
+   RuleCommandProcessor @5

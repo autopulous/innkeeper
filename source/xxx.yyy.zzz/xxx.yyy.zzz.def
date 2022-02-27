@@ -1,0 +1,12 @@
+;This defintion file must be used to build all locations that are to be attached to a Neoheurist engine
+
+LIBRARY
+
+VERSION 1.0
+
+EXPORTS
+   LocationConstructor
+   LocationDestructor
+   LocationValidator
+   LocationDescriber
+   LocationCommandProcessor

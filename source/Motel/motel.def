@@ -1,0 +1,77 @@
+;This defintion file declares the API for the Motel library functions
+
+LIBRARY
+
+VERSION 1.0
+
+EXPORTS
+   SafeMallocBlock
+   SafeCallocBlock
+   SafeReallocBlock
+   SafeFreeBlock
+   ManagedMallocBlock
+   ManagedCallocBlock
+   ManagedFreeBlock
+   CopyBlock
+   CompareBlocks
+
+   AleatorySeed1024Period
+   Aleatory1024Period
+   Probability1024Period
+   AleatorySeed4096Period
+   Aleatory4096Period
+   Probability4096Period
+   ProbabilityIndex
+   ProbabilityString
+
+   CopyString
+   AppendString
+   ReverseString
+   LeftTrimString
+   RightTrimString
+   TrimString
+   CleanseString
+   FindClassMemberCharacter
+   ClassMatchCharacter
+   TranslateCharacter
+   ClassMatchString
+   ClassConformString
+   SearchString
+   ParseString
+   CompareStrings
+   CompareiStrings
+
+   ConstructTree
+   DeleteTreeNode
+   DestructTree
+   FetchTreeNode
+   GetTreeMember
+   InsertTreeNode
+   PeekGreaterTreeNode
+   PeekGreatestTreeNode
+   PeekLeastTreeNode
+   PeekLesserTreeNode
+   SelectTreeNode
+   SetTreeMember
+   UpdateTreeNode
+   ValidateTree
+
+   ConstructQuesta
+   DeleteQuestaNode
+   ResetQuesta
+   DestructQuesta
+   SetQuestaMember
+   GetQuestaMember
+   InsertQuestaNode
+   SelectQuestaNode
+   FetchQuestaNode
+   UpdateQuestaNode
+   PushHeadQuestaNode
+   PushTailQuestaNode
+   PeekHeadQuestaNode
+   PeekTailQuestaNode
+   PeekPreviousQuestaNode
+   PeekNextQuestaNode
+   PullHeadQuestaNode
+   PullTailQuestaNode
+   ValidateQuesta

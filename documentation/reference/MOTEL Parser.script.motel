@@ -1,0 +1,312 @@
+::Schema references
+:MOTEL.*,1:http://www.speakhuman.org/ws/motel.document.sdoc
+:MOTEL Script.**,1:http://www.speakhuman.org/ws/motel.script.sdoc
+
+::Configure Parser
+:MOTEL.Parse Mode:Debug
+::MOTEL document specification
+
+:Parser:
+
+::Constant Objects
+:ANY CHARACTER:[.\n]
+:WHITESPACE CHARACTER:[ \t\r\n\v\f]
+:NAME CHARACTER:[abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789]
+:LEADING DECIMAL DIGIT:[123456789]
+:DECIMAL DIGIT:[0123456789]
+:FALSE:0
+:TRUE:1
+
+::Variable Objects
+:State:1
+:Counter:0
+
+::The first command line argument is the document to parse
+:Document:MOTEL[1]
+
+:Token:MOTEL.EMPTY
+:Character:MOTEL.EMPTY
+
+::MOTEL document parsing algorithm
+
+:Parser.Action:
+::End document parse
+:Do when:State.Match(0)
+:Do what:Document.Close
+:Do what:MOTEL.Terminate
+
+:Parser.Action:
+::Begin document parse
+:Do when:State.Match(1)
+:Do what:Document.Open
+:Do what:Character(Document.Next Character)
+:Do what:State(2)
+
+:Parser.Action:
+::Ignore leading whitespace
+:Do when:State.Match(2)
+:Do when:Character.Match(WHITESPACE CHARACTER)
+:Do what:Character(Document.Next Character)
+
+:Parser.Action:
+::Detect Object Identifier
+:Do when:State.Match(2)
+:Do when,1:Character.Match(":")
+:Do what:Character(Document.Next Character)
+:Do what:State(3)
+
+:Parser.Action:
+::Detect an invalid MOTEL document
+:Do when:State.Match(2)
+:Do what:MOTEL.Error("Expecting an MOTEL Object Delimiter")
+:Do what:State(0)
+
+:Parser.Action:
+::Next Object
+:Do when:State.Match(3)
+:Do when:Character.Match(MOTEL.END OF FILE)
+:Do what:MOTEL.Debug("END OF FILE")
+:Do what:State(0)
+
+:Parser.Action:
+::Next Object
+:Do when:State.Match(3)
+:Object:
+:Namespace:MOTEL.EMPTY
+:Default Namespace Indicator:FALSE
+:All Objects Indicator:FALSE
+:Name:MOTEL.EMPTY
+:Value:MOTEL.EMPTY
+:Do what:State(4)
+
+:Parser.Action:
+::Build first token
+:Do when:State.Match(4)
+:Do when:Character.Match(NAME CHARACTER)
+:Do what:Token.Append(Character)
+:Do what:Character(Document.Next Character)
+
+:Parser.Action:
+::First token is an Object Name
+:Do when:State.Match(4)
+:Do when,1:Character.Match(":")
+:Do what:Object.Name(Token)
+:Do what:Token(MOTEL.EMPTY)
+:Do what:MOTEL.Debug("Object Name = " + Name)
+:Do what:Character(Document.Next Character)
+:Do what:State(10)
+
+:Parser.Action:
+::First token is an Object Name
+:Do when:State.Match(4)
+:Do when:Character.Match(",")
+:Do what:Object.Name(Token)
+:Do what:Token(MOTEL.EMPTY)
+:Do what:MOTEL.Debug("Object Name = " + Name)
+:Do what:Character(Document.Next Character)
+:Do what:State(9)
+
+:Parser.Action:
+::First token is an Object Namespace
+:Do when:State.Match(4)
+:Do when:Character.Match("\.")
+:Do what:Object.Namespace(Token)
+:Do what:Token(MOTEL.EMPTY)
+:Do what:MOTEL.Debug("Object Namespace = " + Namespace)
+:Do what:Character(Document.Next Character)
+:Do what:State(5)
+
+:Parser.Action:
+::Detect an invalid Object Identifier
+:Do when:State.Match(4)
+:Do what:MOTEL.Error("Expecting an MOTEL Object Namespace or Name Delimiter")
+:Do what:State(0)
+
+:Parser.Action:
+::Start second token
+:Do when:State.Match(5)
+:Do when:Character.Match(NAME CHARACTER)
+:Do what:Token.Append(Character)
+:Do what:Character(Document.Next Character)
+:Do what:State(6)
+
+:Parser.Action:
+::Detect an indicator
+:Do when:State.Match(5)
+:Do when:Character.Match("\*")
+:Do what:Token.Append(Character)
+:Do what:Character(Document.Next Character)
+:Do what:State(7)
+
+:Parser.Action:
+::Detect an invalid Object Identifier
+:Do when:State.Match(5)
+:Do what:MOTEL.Error("Expecting an MOTEL Object Identifier, Namespace or Name Indicator")
+:Do what:State(0)
+
+:Parser.Action:
+::Add to second token
+:Do when:State.Match(6)
+:Do when:Character.Match(NAME CHARACTER)
+:Do what:Token.Append(Character)
+:Do what:Character(Document.Next Character)
+
+:Parser.Action:
+::Second token is an Object Name
+:Do when:State.Match(6)
+:Do when,1:Character.Match(":")
+:Do what:Object.Name(Token)
+:Do what:Token(MOTEL.EMPTY)
+:Do what:MOTEL.Debug("Object Name = " + Name)
+:Do what:Character(Document.Next Character)
+:Do what:State(10)
+
+:Parser.Action:
+::Second token is an Object Name
+:Do when:State.Match(6)
+:Do when:Character.Match(",")
+:Do what:Object.Name(Token)
+:Do what:Token(MOTEL.EMPTY)
+:Do what:MOTEL.Debug("Object Name = " + Name)
+:Do what:Character(Document.Next Character)
+:Do what:State(9)
+
+:Parser.Action:
+::Detect an invalidly terminated Object Name
+:Do when:State.Match(5)
+:Do what:MOTEL.Error("Expecting an MOTEL Object Delimiter after Object Name")
+:Do what:State(0)
+
+:Parser.Action:
+::Detect Default Namespace Indicator
+:Do when:State.Match(7)
+:Do when:Character.Match("\*")
+:Do what:Character(Document.Next Character)
+:Do what:State(8)
+
+:Parser.Action:
+::Second token is an All Objects Indicator
+:Do when:State.Match(7)
+:Do when,1:Character.Match(":")
+:Do what:Object.All Objects Indicator(TRUE)
+:Do what:MOTEL.Debug("All Objects Indicator")
+:Do what:Character(Document.Next Character)
+:Do what:State(10)
+
+:Parser.Action:
+::Second token is an All Objects Indicator
+:Do when:State.Match(7)
+:Do when:Character.Match(",")
+:Do what:Object.All Objects Indicator(TRUE)
+:Do what:MOTEL.Debug("All Objects Indicator")
+:Do what:Character(Document.Next Character)
+:Do what:State(9)
+
+:Parser.Action:
+::Detect an invalid All Objects Indicator
+:Do when:State.Match(7)
+:Do what:MOTEL.Error("Expecting an MOTEL Object Delimiter after All Objects Indictor")
+:Do what:State(0)
+
+:Parser.Action:
+::Second token is a Default Namespace Indicator
+:Do when:State.Match(8)
+:Do when,1:Character.Match(":")
+:Do what:Object.Default Namespace Indicator(TRUE)
+:Do what:MOTEL.Debug("Default Namespace Indicator")
+:Do what:Character(Document.Next Character)
+:Do what:State(10)
+
+:Parser.Action:
+::Second token is a Default Namespace Indicator
+:Do when:State.Match(8)
+:Do when:Character.Match(",")
+:Do what:Object.Default Namespace Indicator(TRUE)
+:Do what:MOTEL.Debug("Default Namespace Indicator")
+:Do what:Character(Document.Next Character)
+:Do what:State(9)
+
+:Parser.Action:
+::Detect an invalidly terminated Default Namespace Indicator
+:Do when:State.Match(7)
+:Do what:MOTEL.Error("Expecting an MOTEL Object Delimiter after Default Namespace Indicator")
+:Do what:State(0)
+
+:Parser.Action:
+::Start third token
+:Do when:State.Match(9)
+:Do when:Character.Match(LEADING DECIMAL DIGIT)
+:Do what:Token.Append(Character)
+:Do what:Character(Document.Next Character)
+:Do what:State(10)
+
+:Parser.Action:
+::There is no third token
+:Do when:State.Match(9)
+:Do when,1:Character.Match(":")
+:Do what:Character(Document.Next Character)
+:Do what:State(11)
+
+:Parser.Action:
+::Detect an invalidly terminated Object Identifier
+:Do when:State.Match(9)
+:Do what:MOTEL.Error("Expecting an MOTEL Object Delimiter after Object Name")
+:Do what:State(0)
+
+:Parser.Action:
+::Add to third token
+:Do when:State.Match(10)
+:Do when:Character.Match(DECIMAL DIGIT)
+:Do what:Token.Append(Character)
+:Do what:Character(Document.Next Character)
+
+:Parser.Action:
+::Third token is an Object Value Colon Count
+:Do when:State.Match(10)
+:Do when,1:Character.Match(":")
+:Do what:Counter(Token)
+:Do what:Token(MOTEL.EMPTY)
+:Do what:MOTEL.Debug("Object Value Colon Count = " + Counter)
+:Do what:Character(Document.Next Character)
+:Do what:State(11)
+
+:Parser.Action:
+::Detect an invalidly terminated Object Value Colon Count
+:Do when:State.Match(10)
+:Do what:MOTEL.Error("Expecting an MOTEL Object Delimiter after Object Value Colon Count")
+:Do what:State(0)
+
+:Parser.Action:
+::Begin fourth token
+:Do when:State.Match(11)
+:Do when:Counter.Match(0)
+:Do what:State(12)
+
+:Parser.Action:
+::Fourth token is an Object Value
+:Do when:State.Match(11)
+:Do when,1:Character.Match(":")
+:Do what:Counter.Decrement
+:Do what:Token.Append(Character)
+:Do what:Character(Document.Next Character)
+
+:Parser.Action:
+::Fourth token is an Object Value
+:Do when:State.Match(11)
+:Do what:Token.Append(Character)
+:Do what:Character(Document.Next Character)
+
+:Parser.Action:
+::Fourth token is an Object Value
+:Do when:State.Match(12)
+:Do when,1:Character.Match(":")
+:Do what:Object.Value(Token)
+:Do what:Token(MOTEL.EMPTY)
+:Do what:Character(Document.Next Character)
+:Do what:State(3)
+
+:Parser.Action:
+::Fourth token is an Object Value
+:Do when:State.Match(12)
+:Do what:Token.Append(Character)
+:Do what:Character(Document.Next Character)
