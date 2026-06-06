@@ -88,7 +88,7 @@ The vision that v1 is the *foundation* for (captured, but **not** v1 scope):
 ## Risks
 
 - **Scope-creep (top risk).** Getting pulled into the vision and leaving the foundation half-built. *Mitigation:* the two-phase split, the explicit deferrals above, and the strict 5-point definition of done are the guardrails — v1 ships when those five gates pass, no more.
-- **The build/refactor is a deeper hole than it looks.** `GetCommand` is self-described in-source as "severely broken — mid-refactoring"; a tokenizer trailing-space bug blocks parsing; two parallel engine generations (`main.c` vs. the older `engine.c`/`rule.*`) must be untangled. *Mitigation:* sequence the mechanical build-blockers (Phase 0 in the research artifact) before correctness work.
+- **The build/refactor is a deeper hole than it looks.** `GetCommand` is self-described in-source as "severely broken — mid-refactoring"; two parallel engine generations (`main.c` vs. the older `engine.c`/`rule.*`) must be untangled. (The research artifact's suspected "tokenizer trailing-space bug" was **refuted** on later inspection — tokenization is already correct; see requirements FR-3.) *Mitigation:* sequence the mechanical build-blockers (Phase 0 in the research artifact) before correctness work.
 - **Solo bandwidth + LLM-as-force-multiplier dependency.** The whole "why now" rides on the LLM actually being a multiplier for deep, idiosyncratic C systems work. *Mitigation:* treat exploring that partnership's limits as an explicit secondary objective, not a hidden assumption.
 
 ## Horizon

@@ -66,8 +66,8 @@ Per-category: **FR** 11 (8 active + 3 Won't) · **NFR** 4 (all Won't/deferred) �
 **Statement:** Typed player commands must parse and dispatch correctly.
 **Acceptance criteria:**
 - The `GetCommand` refactor (self-annotated "severely broken - mid-refactoring") is completed.
-- The tokenizer trailing-space bug is fixed so non-final tokens match their word-lists.
-- The dangling-pointer return from `ParseTokenizedCommand` (returns into a by-value stack copy) is resolved.
+- Tokenization is verified to already split tokens correctly: the prior research artifact's "trailing-space bug" was **refuted** on inspection — in `TokenizeCommand` (`source/Command/command.c:326-333`) `character++` runs before `CopyString`, so the delimiting space is excluded and `MatchToken` compares cleanly. No fix is required here; this item is a confirmation, not a change.
+- The dangling-pointer return from `ParseTokenizedCommand` (returns `&pCommandTokens.Token[token]` into a by-value stack copy) is resolved. Note: the sole live caller (`source/Main/main.c:662`) currently discards the return value, so this is a latent defect rather than an active failure — fix it to harden the contract before any future caller dereferences it.
 - In the walkthrough, multi-word commands (e.g. `OPEN TROPHY CASE`, compound directions) dispatch to the correct handler.
 **Traces to goal:** Definition of done #2–#3, Risks (build-depth).
 
