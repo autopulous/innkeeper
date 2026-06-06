@@ -1,0 +1,2 @@
+# Session handoff artifacts are local-only; do not track in the repository.
+thoughts/shared/handoffs/
