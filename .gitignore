@@ -1,2 +1,6 @@
 # Session handoff artifacts are local-only; do not track in the repository.
 thoughts/shared/handoffs/
+
+# Local Sonar opt-out: credential-scan skip markers and plugin-disable settings.
+.claude/.sonar-skip
+.claude/settings.json
