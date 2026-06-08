@@ -617,7 +617,7 @@ int main
         exit(-1);
     }
 
-    Context lContext = {(HMODULE) NULL, NOWHERE, &lConnections, Female, GenderQualifiers, Tweleve, Eight, Tweleve, Eight, Tweleve, Eight, Tweleve, Eight, CONTEXT_NAME, Verbose, Normal, Terse, TRUE, Terse, FALSE, FALSE, FALSE, ItemStates, lLocationStates};
+    Context lContext = {(HMODULE) NULL, NOWHERE, &lConnections, Female, GenderQualifiers, Twelve, Eight, Twelve, Eight, Twelve, Eight, Twelve, Eight, CONTEXT_NAME, Verbose, Normal, Terse, TRUE, Terse, FALSE, FALSE, FALSE, ItemStates, lLocationStates};
 
 	Tokens lCommandTokens;
 
@@ -659,7 +659,7 @@ int main
 
 		/* Slot the tokens found in the command as parts of speech */
 
-		ParseTokenizedCommand(lCommandTokens, Commands, &lParsedCommand);
+		ParseTokenizedCommand(&lCommandTokens, Commands, &lParsedCommand);
 
 		/* Interpret the tokenized sentence */
 

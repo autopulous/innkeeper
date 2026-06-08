@@ -4,3 +4,23 @@ thoughts/shared/handoffs/
 # Local Sonar opt-out: credential-scan skip markers and plugin-disable settings.
 .claude/.sonar-skip
 .claude/settings.json
+
+# Build output (Directory.Build.props sends all projects to repo-root bin/ and obj/).
+/bin/
+/obj/
+
+# Legacy/stray MSBuild output directories from before the bin/obj migration.
+/Release/
+/Debug/
+
+# Stale / legacy in-tree MSBuild output and editor state.
+source/x64/
+source/Release/
+source/Debug/
+source/**/x64/
+source/**/Intermediate/
+*.sdf
+*.suo
+*.VC.db
+*.stackdump
+bash.exe.stackdump

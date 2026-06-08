@@ -113,7 +113,7 @@ typedef enum Level
 	Nine = 90,
 	Ten = 100,
 	Eleven = 110,
-	Tweleve = 120,
+	Twelve = 120,
 
 	_Level
 } Level;

@@ -61,7 +61,7 @@ boolean CALLING_CONVENTION SleepProcessor
 {
 	Command lCommand;
 
-	char * lCommandRemainder = ParseTokenizedCommand(pTokens, Commands, &lCommand);
+	char * lCommandRemainder = ParseTokenizedCommand(&pTokens, Commands, &lCommand);
 
 	if (pContext->Debug)
 	{
@@ -93,7 +93,7 @@ boolean CALLING_CONVENTION SleepProcessor
 			}
 			else if (EqualStringsi("Hyper", lCommand.IndirectObjectNoun))
 			{
-				pContext->Alertness = Tweleve;
+				pContext->Alertness = Twelve;
 			}
 			else if (NULL != lCommandRemainder)
 			{
@@ -145,7 +145,7 @@ boolean CALLING_CONVENTION SleepProcessor
 
 			printf("you slept for %d units... ", sleepDuration);
 
-			if (Tweleve <= pContext->Alertness)
+			if (Twelve <= pContext->Alertness)
 			{
 				printf("and are now hyperaware!\n");
 			}

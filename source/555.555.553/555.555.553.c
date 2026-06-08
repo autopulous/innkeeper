@@ -135,7 +135,7 @@ boolean CALLING_CONVENTION LocationCommandProcessor
 
         CommandTree Commands = {lVerbs, lDirectObjectArticles, lDirectObjectAdjectives, lDirectObjectNouns, lPrepositions, lIndirectObjectArticles, lIndirectObjectAdjectives, lIndirectObjectNouns};
 
-        lCommandRemainder = ParseTokenizedCommand(pTokens, Commands, &lCommand);
+        lCommandRemainder = ParseTokenizedCommand(&pTokens, Commands, &lCommand);
 
         if (*CC_STRING_TERMINATOR != *lCommand.Verb && *CC_STRING_TERMINATOR != *lCommand.IndirectObjectAdjective && NULL == lCommandRemainder)
         {
@@ -152,7 +152,7 @@ boolean CALLING_CONVENTION LocationCommandProcessor
 
         CommandTree Commands = {lVerbs, lDirectObjectArticles, lDirectObjectAdjectives, lDirectObjectNouns, lPrepositions, lIndirectObjectArticles, lIndirectObjectAdjectives, lIndirectObjectNouns};
 
-        lCommandRemainder = ParseTokenizedCommand(pTokens, Commands, &lCommand);
+        lCommandRemainder = ParseTokenizedCommand(&pTokens, Commands, &lCommand);
 
         if (*CC_STRING_TERMINATOR != *lCommand.Verb && *CC_STRING_TERMINATOR != *lCommand.DirectObjectNoun && *CC_STRING_TERMINATOR != *lCommand.IndirectObjectAdjective && NULL == lCommandRemainder)
         {
@@ -171,7 +171,7 @@ boolean CALLING_CONVENTION LocationCommandProcessor
 
         CommandTree Commands = {lVerbs, lDirectObjectArticles, lDirectObjectAdjectives, lDirectObjectNouns, lPrepositions, lIndirectObjectArticles, lIndirectObjectAdjectives, lIndirectObjectNouns};
 
-        lCommandRemainder = ParseTokenizedCommand(pTokens, Commands, &lCommand);
+        lCommandRemainder = ParseTokenizedCommand(&pTokens, Commands, &lCommand);
 
         if (*CC_STRING_TERMINATOR != *lCommand.Verb && *CC_STRING_TERMINATOR != *lCommand.DirectObjectNoun && NULL != lCommandRemainder)
         {

@@ -163,7 +163,7 @@ void CALLING_CONVENTION LocationValidator
 
     /* validate case condition */
 
-    if (Zero > lState->caseCondition || Tweleve < lState->caseCondition)
+    if (Zero > lState->caseCondition || Twelve < lState->caseCondition)
     {
         return;
     }
@@ -188,7 +188,7 @@ boolean CALLING_CONVENTION LocationCommandProcessor
 
     Command lCommand;
 
-    char * lCommandRemainder = ParseTokenizedCommand(pTokens, Commands, &lCommand);
+    char * lCommandRemainder = ParseTokenizedCommand(&pTokens, Commands, &lCommand);
 
 	if (ClassMatchString(lCommand.Verb, CASE_VERBS, ""))
 	{

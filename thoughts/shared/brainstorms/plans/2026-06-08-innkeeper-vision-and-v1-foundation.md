@@ -102,6 +102,7 @@ All 15 active requirements (11 Must + 4 Should) map to 16 work units. Won't item
 **Definition of done:**
 - The `FD1C5E16-…` reference, the two no-source template projects, and the missing `Item` project reference are removed.
 - The solution loads with no missing-project errors.
+**Status (2026-06-08): DONE, with correction.** `FD1C5E16-…` (dangling — no files on disk) removed from the `.sln`. The "two no-source dead templates" premise was **falsified by the build**: `xxx.yyy.zzz` is the location-contract header (`#include`d by `main.c`/`sleep.h`/all 5 rooms — kept; see project memory `xxx-yyy-zzz-is-the-location-contract`); `xxxxxxxx-…` kept per user decision (Option A). Both templates remain on disk but are dropped as buildable `.sln` projects (they emit nothing). The `.sln` has no `Item` project reference (the claim was stale); `Item/` headers left in place.
 
 #### WU-2: Retarget toolchain + x64 output co-location
 **Statement:** A fresh clone builds the engine EXE and all five room DLLs to completion via one documented invocation on the installed toolchain.
@@ -111,6 +112,7 @@ All 15 active requirements (11 Must + 4 Should) map to 16 work units. Won't item
 - Stale `v141` / Windows SDK `10.0.17763.0` pins are retargeted to the installed toolset/SDK and committed (not re-applied by hand).
 - A clean clone produces the engine EXE + 5 room DLLs with 0 errors via the documented build path.
 - The x64 `OutDir`/`IntDir` co-locate the EXE and room DLLs (traces OR-1).
+**Status (2026-06-08): DONE.** Retargeted to `v143` / Windows SDK `10.0.26100.0`. **Win32 dropped — solution is x64-only** (scope refinement: the DLL-per-location model is single-bitness). Co-location solved centrally via `source/Directory.Build.props` (imported by all projects) sending output to repo-root `..\bin\$(Platform)\$(Configuration)\` and intermediates to `..\obj\$(MSBuildProjectName)\$(Platform)\$(Configuration)\`; per-project `OutDir`/`IntDir` overrides removed. Full `Release|x64` rebuild is green — `Neoheurist.exe` + 5 room DLLs + 5 service/library DLLs all co-located in `innkeeper\bin\x64\Release\`. (`bin/`, `obj/`, legacy `Release/` gitignored.)
 
 #### WU-4: Working command pipeline
 **Statement:** Typed multi-word player commands parse and dispatch to the correct handler.
@@ -121,6 +123,7 @@ All 15 active requirements (11 Must + 4 Should) map to 16 work units. Won't item
 - The `ParseTokenizedCommand` dangling-pointer return (`source/Command/command.c:341-450`, currently discarded by `source/Main/main.c:662`) is resolved.
 - Multi-word commands (e.g. `OPEN TROPHY CASE`, compound directions) dispatch correctly in the walkthrough.
 - No tokenizer change is made — the suspected trailing-space bug was refuted (`TokenizeCommand`, `command.c:326-333`).
+**Status (2026-06-08): PARTIAL.** **Dangling pointer RESOLVED** — `ParseTokenizedCommand` now takes `Tokens *` (its returned leftover-token pointer references the caller's buffer, not a dead by-value stack copy). The plan/requirements claim of a *sole* live caller (`main.c:662`) was **wrong**: there are **7 callers** (main.c + `Sleep/sleep.c` + rooms `555.555.553` ×3 / `555.555.554` / `555.555.555`), all updated to pass `&`. Solution rebuilds green on x64. **`GetCommand` refactor COMPLETE** — the by-`pCommandProcessor` rewrite was already in place; **John manually validated the behavior** (interactive run), so the stale "severely broken - mid-refactoring" banner was removed (`command.c`). No tokenizer change (refuted). **WU-4 DONE.**
 
 #### WU-3: 26-direction compass navigation
 **Statement:** A player moves among all five sample rooms by issuing direction commands across the full 26-direction compass.

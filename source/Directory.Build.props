@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Central build-output layout for the Neoheurist solution (imported by every project).
+  Co-locates the engine EXE and all room/service DLLs in one directory per platform/
+  configuration so the engine can load location DLLs at runtime (requirement OR-1).
+  Build output lives outside the source tree (repo-root bin/ and obj/), gitignored.
+-->
+<Project>
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\obj\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+</Project>

@@ -110,7 +110,7 @@ void CALLING_CONVENTION TokenizeCommand
 
 char * CALLING_CONVENTION ParseTokenizedCommand
 (
-    Tokens pCommandTokens,
+    Tokens * pCommandTokens,
     CommandTree pCommands,
     Command * pParsedCommandTokens
 );

@@ -60,10 +60,6 @@ char * CALLING_CONVENTION GetCommand
     CommandProcessor * pCommandProcessor
 )
 {
-    /************************************************************************************
-         This function is severely broken - mid-refactoring to use pCommandProcessor
-    *************************************************************************************/
-
     size_t lCommandCursor = pCommandProcessor->NextCommandCursor;
 
     char * lCommandString = pCommandProcessor->Command[lCommandCursor];
@@ -340,7 +336,7 @@ void CALLING_CONVENTION TokenizeCommand
 
 char * CALLING_CONVENTION ParseTokenizedCommand
 (
-    Tokens pCommandTokens,
+    Tokens * pCommandTokens,
     CommandTree pCommands,
     Command * pParsedCommandTokens
 )
@@ -353,11 +349,11 @@ char * CALLING_CONVENTION ParseTokenizedCommand
 
     /* Look for a verb */
 
-    if (MatchToken(pCommandTokens.Token[token], pCommands.Verbs, pParsedCommandTokens->Verb))
+    if (MatchToken(pCommandTokens->Token[token], pCommands.Verbs, pParsedCommandTokens->Verb))
     {
-		CopyString(pCommandTokens.Token[token++], pParsedCommandTokens->Verb, sizeof(pParsedCommandTokens->Verb));
+		CopyString(pCommandTokens->Token[token++], pParsedCommandTokens->Verb, sizeof(pParsedCommandTokens->Verb));
 
-        if (*CC_STRING_TERMINATOR == *pCommandTokens.Token[token])
+        if (*CC_STRING_TERMINATOR == *pCommandTokens->Token[token])
         {
             return ((char *) NULL);
         }
@@ -365,11 +361,11 @@ char * CALLING_CONVENTION ParseTokenizedCommand
 
     /* Look for a direct object article */
 
-    if (MatchToken(pCommandTokens.Token[token], pCommands.DirectObjectArticles, pParsedCommandTokens->DirectObjectArticle))
+    if (MatchToken(pCommandTokens->Token[token], pCommands.DirectObjectArticles, pParsedCommandTokens->DirectObjectArticle))
     {
-		CopyString(pCommandTokens.Token[token++], pParsedCommandTokens->DirectObjectArticle, sizeof(pParsedCommandTokens->DirectObjectArticle));
+		CopyString(pCommandTokens->Token[token++], pParsedCommandTokens->DirectObjectArticle, sizeof(pParsedCommandTokens->DirectObjectArticle));
 
-        if (*CC_STRING_TERMINATOR == *pCommandTokens.Token[token])
+        if (*CC_STRING_TERMINATOR == *pCommandTokens->Token[token])
         {
             return ((char *) NULL);
         }
@@ -377,11 +373,11 @@ char * CALLING_CONVENTION ParseTokenizedCommand
 
     /* Look for a direct object adjective */
 
-    if (MatchToken(pCommandTokens.Token[token], pCommands.DirectObjectAdjectives, pParsedCommandTokens->DirectObjectAdjective))
+    if (MatchToken(pCommandTokens->Token[token], pCommands.DirectObjectAdjectives, pParsedCommandTokens->DirectObjectAdjective))
     {
-		CopyString(pCommandTokens.Token[token++], pParsedCommandTokens->DirectObjectAdjective, sizeof(pParsedCommandTokens->DirectObjectAdjective));
+		CopyString(pCommandTokens->Token[token++], pParsedCommandTokens->DirectObjectAdjective, sizeof(pParsedCommandTokens->DirectObjectAdjective));
 
-        if (*CC_STRING_TERMINATOR == *pCommandTokens.Token[token])
+        if (*CC_STRING_TERMINATOR == *pCommandTokens->Token[token])
         {
             return ((char *) NULL);
         }
@@ -389,11 +385,11 @@ char * CALLING_CONVENTION ParseTokenizedCommand
 
     /* Look for a direct object */
 
-    if (MatchToken(pCommandTokens.Token[token], pCommands.DirectObjectNouns, pParsedCommandTokens->DirectObjectNoun))
+    if (MatchToken(pCommandTokens->Token[token], pCommands.DirectObjectNouns, pParsedCommandTokens->DirectObjectNoun))
     {
-		CopyString(pCommandTokens.Token[token++], pParsedCommandTokens->DirectObjectNoun, sizeof(pParsedCommandTokens->DirectObjectNoun));
+		CopyString(pCommandTokens->Token[token++], pParsedCommandTokens->DirectObjectNoun, sizeof(pParsedCommandTokens->DirectObjectNoun));
 
-        if (*CC_STRING_TERMINATOR == *pCommandTokens.Token[token])
+        if (*CC_STRING_TERMINATOR == *pCommandTokens->Token[token])
         {
             return ((char *) NULL);
         }
@@ -401,11 +397,11 @@ char * CALLING_CONVENTION ParseTokenizedCommand
 
     /* Look for a preposition */
 
-    if (MatchToken(pCommandTokens.Token[token], pCommands.Prepositions, pParsedCommandTokens->Preposition))
+    if (MatchToken(pCommandTokens->Token[token], pCommands.Prepositions, pParsedCommandTokens->Preposition))
     {
-		CopyString(pCommandTokens.Token[token++], pParsedCommandTokens->Preposition, sizeof(pParsedCommandTokens->Preposition));
+		CopyString(pCommandTokens->Token[token++], pParsedCommandTokens->Preposition, sizeof(pParsedCommandTokens->Preposition));
 
-        if (*CC_STRING_TERMINATOR == *pCommandTokens.Token[token])
+        if (*CC_STRING_TERMINATOR == *pCommandTokens->Token[token])
         {
             return ((char *) NULL);
         }
@@ -413,11 +409,11 @@ char * CALLING_CONVENTION ParseTokenizedCommand
 
     /* Look for a indirect object article */
 
-    if (MatchToken(pCommandTokens.Token[token], pCommands.IndirectObjectArticles, pParsedCommandTokens->IndirectObjectArticle))
+    if (MatchToken(pCommandTokens->Token[token], pCommands.IndirectObjectArticles, pParsedCommandTokens->IndirectObjectArticle))
     {
-		CopyString(pCommandTokens.Token[token++], pParsedCommandTokens->IndirectObjectArticle, sizeof(pParsedCommandTokens->IndirectObjectArticle));
+		CopyString(pCommandTokens->Token[token++], pParsedCommandTokens->IndirectObjectArticle, sizeof(pParsedCommandTokens->IndirectObjectArticle));
 
-        if (*CC_STRING_TERMINATOR == *pCommandTokens.Token[token])
+        if (*CC_STRING_TERMINATOR == *pCommandTokens->Token[token])
         {
             return ((char *) NULL);
         }
@@ -425,11 +421,11 @@ char * CALLING_CONVENTION ParseTokenizedCommand
 
     /* Look for a indirect object adjective */
 
-    if (MatchToken(pCommandTokens.Token[token], pCommands.IndirectObjectAdjectives, pParsedCommandTokens->IndirectObjectAdjective))
+    if (MatchToken(pCommandTokens->Token[token], pCommands.IndirectObjectAdjectives, pParsedCommandTokens->IndirectObjectAdjective))
     {
-		CopyString(pCommandTokens.Token[token++], pParsedCommandTokens->IndirectObjectAdjective, sizeof(pParsedCommandTokens->IndirectObjectAdjective));
+		CopyString(pCommandTokens->Token[token++], pParsedCommandTokens->IndirectObjectAdjective, sizeof(pParsedCommandTokens->IndirectObjectAdjective));
 
-        if (*CC_STRING_TERMINATOR == *pCommandTokens.Token[token])
+        if (*CC_STRING_TERMINATOR == *pCommandTokens->Token[token])
         {
             return ((char *) NULL);
         }
@@ -437,17 +433,17 @@ char * CALLING_CONVENTION ParseTokenizedCommand
 
     /* Look for an indirect object */
 
-	if (MatchToken(pCommandTokens.Token[token], pCommands.IndirectObjectNouns, pParsedCommandTokens->IndirectObjectNoun))
+	if (MatchToken(pCommandTokens->Token[token], pCommands.IndirectObjectNouns, pParsedCommandTokens->IndirectObjectNoun))
     {
-		CopyString(pCommandTokens.Token[token++], pParsedCommandTokens->IndirectObjectNoun, sizeof(pParsedCommandTokens->IndirectObjectNoun));
+		CopyString(pCommandTokens->Token[token++], pParsedCommandTokens->IndirectObjectNoun, sizeof(pParsedCommandTokens->IndirectObjectNoun));
 
-        if (*CC_STRING_TERMINATOR == *pCommandTokens.Token[token])
+        if (*CC_STRING_TERMINATOR == *pCommandTokens->Token[token])
         {
             return ((char *) NULL);
         }
     }
 
-    return (pCommandTokens.Token[token]);
+    return (pCommandTokens->Token[token]);
 }
 
 static void Erase
