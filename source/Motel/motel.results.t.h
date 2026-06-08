@@ -3,7 +3,7 @@
   
   application programmer's types (APT) header file
   ---------------------------------------------------------------------------- 
-  Copyright 2010-2012 John L. Hart IV. All rights reserved.
+  Copyright 2010-2012, 2026 John L. Hart IV. All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:

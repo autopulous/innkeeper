@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------
 Neoheurist character gender object
 
-Copyright 2015 John L. Hart IV. All rights reserved.
+Copyright 2015, 2026 John L. Hart IV. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

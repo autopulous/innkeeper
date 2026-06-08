@@ -3,7 +3,7 @@
  
   library implementation file
   ----------------------------------------------------------------------------
-  Copyright 2010-2011 John L. Hart IV. All rights reserved.
+  Copyright 2010-2011, 2026 John L. Hart IV. All rights reserved.
  
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
@@ -49,7 +49,7 @@
   Embedded copyright
   ----------------------------------------------------------------------------*/
 
-static const char *gCopyright = "@(#)motel.tree.c - Copyright 2010-2011 John L. Hart IV - All rights reserved";
+static const char *gCopyright = "@(#)motel.tree.c - Copyright 2010-2011, 2026 John L. Hart IV - All rights reserved";
 
 /*----------------------------------------------------------------------------
   Public functions

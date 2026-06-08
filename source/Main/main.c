@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------
   Neoheurist engine
 
-  Copyright 2011-2015 John L. Hart IV. All rights reserved.
+  Copyright 2011-2015, 2026 John L. Hart IV. All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
@@ -85,7 +85,7 @@
   Embedded copyright
   ----------------------------------------------------------------------------*/
 
-static const char *gCopyright UNUSED = "@(#)main.c - Copyright 2011-2015 John L. Hart IV - All rights reserved";
+static const char *gCopyright UNUSED = "@(#)main.c - Copyright 2011-2015, 2026 John L. Hart IV - All rights reserved";
 
 /*----------------------------------------------------------------------------
   :Eeek:Globals
