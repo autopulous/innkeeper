@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------
   Motel Input Output
 
-  application programmer's types (APT) header file
+  internal header file
   ----------------------------------------------------------------------------
   Copyright 2011-2015, 2026 John L. Hart IV. All rights reserved.
 
@@ -32,31 +32,27 @@
   policies, either expressed or implied, of John L Hart IV.
   ----------------------------------------------------------------------------*/
 
-#ifndef MOTEL_IO_T_H
-#define MOTEL_IO_T_H
+#ifndef MOTEL_IO_H
+#define MOTEL_IO_H
+
+#include <string.h>
+
+#include "motel.compilation.t.h"
+#include "motel.types.t.h"
+
+#include "motel.string.t.h"
+#include "motel.string.i.h"
 
 /*----------------------------------------------------------------------------
-  Constants
+  Public macros and data types
   ----------------------------------------------------------------------------*/
 
-/* Maximum length (including the string terminator) of a header field's name or value. */
-
-#define MOTEL_FIELD_SIZE (size_t) 256
+#include "motel.io.t.h"
 
 /*----------------------------------------------------------------------------
-  Complex types
+  Public function prototypes
   ----------------------------------------------------------------------------*/
 
-/*
-** A single MOTEL header declaration: a (possibly member-delimited) object name
-** and its value, serialized as ":<Name>:<Value>". The Name may contain the
-** member delimiter (for example "Save.Version"); it is preserved verbatim.
-*/
-
-typedef struct motelField
-{
-    char Name[MOTEL_FIELD_SIZE];
-    char Value[MOTEL_FIELD_SIZE];
-} motelField;
+#include "motel.io.i.h"
 
 #endif

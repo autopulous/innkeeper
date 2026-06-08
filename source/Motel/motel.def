@@ -75,3 +75,6 @@ EXPORTS
    PullHeadQuestaNode
    PullTailQuestaNode
    ValidateQuesta
+
+   WriteMotelDocument
+   ReadMotelDocument

@@ -166,6 +166,7 @@ All 15 active requirements (11 Must + 4 Should) map to 16 work units. Won't item
 **Definition of done:**
 - `motel.io` writes and reads declarations, the member delimiter, and a `,*` streaming member.
 - A header-plus-opaque-payload document round-trips (envelope written, then parsed back to the same metadata + payload bytes).
+**Status (2026-06-08): DONE.** Implemented the in-memory serializer (Option A): `source/Motel/motel.io.c` + fleshed-out `motel.io.t.h`/`.i.h` + new `motel.io.h`, wired into `Motel.vcxproj` and exported from `motel.def`. `WriteMotelDocument` emits `:<Name>:<Value>` header declarations then a final `:<Name>,*:<payload>` streaming member (runs to end-of-document); `ReadMotelDocument` parses headers into a `motelField[]` and returns the streaming name + payload as zero-copy pointers into the document. Verified with a standalone MSVC round-trip harness: 3 header fields + payload recovered byte-for-byte, **including embedded colons, braces, and newlines** in the opaque payload (no escaping). Solution builds green (11 binaries). File I/O + `saves/` dir are deferred to WU-10 (per AD-4).
 
 #### WU-9: State-tree serialize / deserialize
 **Statement:** The UUID-keyed state trees round-trip to JSON with full fidelity.
