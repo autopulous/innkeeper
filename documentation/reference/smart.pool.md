@@ -89,16 +89,21 @@ chain.
 > **Diagram note (verbatim):** *"To minimize clutter within the diagram segment lists for
 > blocks (0, 2, 3, 4 & 6) are not shown."* Only block 1's segment list is drawn in full.
 
-## Why this matters for Innkeeper v1
+## Relationship to the save file format
 
-The handle-indirection model is load-bearing for the planned save/load work:
+The smart pool is a **runtime memory-management** concern and has **no significant impact on
+the save file format**:
 
-- It is almost certainly **why UUID-keyed `LocationStates` can survive a location DLL unload
-  and reload** (requirements DR-1): state is referenced by stable keys/handles, not by raw
-  pointers that a DLL unload would dangle.
-- For the `motel.io` serializer and the state-tree round-trip (work units WU-8 and WU-9),
-  knowing the in-memory tree sits behind handle indirection with size-class pools clarifies
-  what the serializer must walk and reconstruct.
+- The pool's handles and addresses (`0x40D10038`, `0x1400AFB8`, …) are **process-local and
+  meaningless across a restart**, so they are never serialized. The save file carries
+  *logical* state, not allocator internals.
+- What lets `LocationStates` / `ItemStates` survive a location DLL unload and reload (DR-1) is
+  their **UUID keying** — a property of logical identity in the state tree, **separate from**
+  this allocator.
+- On deserialization the state tree is rebuilt with **freshly allocated** pool memory and
+  **new** handles; the file never contained the old ones. So the `motel.io` serializer and the
+  state-tree round-trip (work units WU-8 and WU-9) walk the logical UUID-keyed state — the
+  smart pool affects only in-RAM behavior and allocation-at-load-time, not the on-disk bytes.
 
 This memory-layer "smart" pattern is distinct from the I/O-layer pattern documented in
 `Smart Interface Pattern.xlsx.md` (a node-operation capability matrix); the two describe
