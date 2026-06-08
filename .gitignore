@@ -24,3 +24,4 @@ source/**/Intermediate/
 *.VC.db
 *.stackdump
 bash.exe.stackdump
+/source/.vs
