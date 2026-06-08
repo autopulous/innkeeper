@@ -133,6 +133,7 @@ All 15 active requirements (11 Must + 4 Should) map to 16 work units. Won't item
 - The 26 direction names are present in the command vocabulary (`HEADING_WORDS`).
 - Every populated adjacency among the five rooms is reachable by its compound direction word.
 - A zero / out-of-bounds / unpopulated direction is refused with "Cannot traverse in that direction."
+**Status (2026-06-08): DONE.** The navigation was already fully implemented (once the build was fixed): `HEADING_WORDS` carries all 26 compound directions (`vocabulary.t.h:67`); the movement dispatch (`main.c:1073-1188`) maps every heading word to its `Connections[x][y][z]` cell and calls `LocationLoader`; bare directions get a `"Bolt"` verb injected; `ConnectAdjacentLocations` probes the 26 neighbors by `%d.%d.%d.dll`; `LocationLoader` refuses `000`/out-of-bounds. Added the trailing period to the refusal message to match the AC verbatim ("Cannot traverse in that direction."). **John manually validated** walking the five rooms by direction word. No other code change needed.
 
 #### WU-5: Trophy Case stateful behavior
 **Statement:** The Barracks Trophy Case opens, closes, locks, and unlocks consistently.
@@ -140,6 +141,7 @@ All 15 active requirements (11 Must + 4 Should) map to 16 work units. Won't item
 **Depends on:** WU-4
 **Definition of done:**
 - Open / close / lock / unlock behave consistently in the walkthrough.
+**Status (2026-06-08): DONE.** The open/close/lock/unlock state machine (`caseClosure`) is complete and consistent (`555.555.555.c:222-333`); state changes persist via the State service (`done;` → `complete:` → `StateUpdater`). The damage-verb `switch` fall-through is **intentional** (a more-damaged condition cumulatively prints all lesser-damage descriptions) — confirmed by John and documented in-code. John validated the walkthrough.
 
 #### WU-6: Changing room gender/name mutation
 **Statement:** The Changing room mutates the player's gender/name and the change persists.
@@ -147,6 +149,7 @@ All 15 active requirements (11 Must + 4 Should) map to 16 work units. Won't item
 **Depends on:** WU-4
 **Definition of done:**
 - Gender/name mutation persists on the `Context`.
+**Status (2026-06-08): DONE.** `AssignGender` mutates `pContext->Gender`; "Set my name to ⟨x⟩" copies into `pContext->Name` — both persist on the `Context` (carried between rooms). The WU-4 dangling-pointer fix is what makes the name-change (which uses the `ParseTokenizedCommand` remainder pointing into `pTokens`) safe. John validated the walkthrough.
 
 #### WU-7: Tiny bedroom sleep delegation
 **Statement:** The Tiny bedroom's sleep action delegates to the Sleep module and returns.
@@ -154,6 +157,7 @@ All 15 active requirements (11 Must + 4 Should) map to 16 work units. Won't item
 **Depends on:** WU-4
 **Definition of done:**
 - Sleep delegates to the Sleep module and returns cleanly in the walkthrough.
+**Status (2026-06-08): DONE.** `LocationCommandProcessor` delegates to `SleepProcessor(pContext, pTokens)` first and returns `TRUE` when it handles the command (`555.555.554.c:67-70`); local Alertness/Sleep logic backs it up. John validated the walkthrough.
 
 #### WU-8: `motel.io` serialization substrate
 **Statement:** `motel.io` can write and read the minimal `.motel` subset needed to carry an opaque payload.
@@ -190,6 +194,7 @@ All 15 active requirements (11 Must + 4 Should) map to 16 work units. Won't item
 **Definition of done:**
 - `source/Command/engine.c`, `engine.t.h`, and `rule.*` are deleted.
 - The build stays clean and the game still plays with the older generation gone.
+**Status (2026-06-08): DONE.** Removed `engine.c`, `engine.t.h`, `rule.def`, `rule.h`, `rule.t.h` (the superseded "rule engine" generation). Confirmed dead first: compiled by no project (Command.vcxproj builds only `command.c`) and `#include`d by nothing live (only each other). Also fixed a residue — `main.c`'s embedded `gCopyright` what-string still read `@(#)engine.c` (from when `main.c` was split out of `engine.c`); corrected to `@(#)main.c`. Full `Release|x64` rebuild green (11 binaries); git history preserves the removed files (AD-5).
 
 #### WU-11: Plugin-contract reference + authoring checklist
 **Statement:** An author can build a new room from the documentation alone, without reading engine source.

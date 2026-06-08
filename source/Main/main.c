@@ -85,7 +85,7 @@
   Embedded copyright
   ----------------------------------------------------------------------------*/
 
-static const char *gCopyright UNUSED = "@(#)engine.c - Copyright 2011-2015 John L. Hart IV - All rights reserved";
+static const char *gCopyright UNUSED = "@(#)main.c - Copyright 2011-2015 John L. Hart IV - All rights reserved";
 
 /*----------------------------------------------------------------------------
   :Eeek:Globals
@@ -511,7 +511,7 @@ void LocationLoader
 
     if (000 == pLocation->X || 000 == pLocation->Y || 000 == pLocation->Z)
     {
-        printf("Cannot traverse in that direction\n");
+        printf("Cannot traverse in that direction.\n");
 
         return;
     }

@@ -362,6 +362,8 @@ boolean CALLING_CONVENTION LocationCommandProcessor
                 lState->caseCondition = Zero;
 			}
 
+            /* the case labels below intentionally fall through: a more-damaged (lower) condition cumulatively prints all the lesser-damage descriptions */
+
             switch (lState->caseCondition)
             {
                 case Zero:
