@@ -5,11 +5,13 @@ thoughts/shared/handoffs/
 .claude/.sonar-skip
 .claude/settings.json
 
-# Build output (Directory.Build.props sends all projects to repo-root bin/ and obj/).
+# Build output: Directory.Build.props consolidates every project under build/
+# (build/bin for binaries, build/obj for intermediates).
+/build/
+
+# Legacy/stray MSBuild output directories from earlier layouts (pre-build/ migration).
 /bin/
 /obj/
-
-# Legacy/stray MSBuild output directories from before the bin/obj migration.
 /Release/
 /Debug/
 
