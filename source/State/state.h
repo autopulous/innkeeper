@@ -40,6 +40,9 @@ policies, either expressed or implied, of John L Hart IV.
 
 #include "../Motel/motel.memory.i.h"
 
+#include "../Motel/motel.string.t.h"
+#include "../Motel/motel.string.i.h"
+
 #include "../Motel/motel.tree.t.h"
 #include "../Motel/motel.tree.i.h"
 

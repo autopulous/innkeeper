@@ -617,7 +617,7 @@ int main
         exit(-1);
     }
 
-    Context lContext = {(HMODULE) NULL, NOWHERE, &lConnections, Female, GenderQualifiers, Twelve, Eight, Twelve, Eight, Twelve, Eight, Twelve, Eight, CONTEXT_NAME, Verbose, Normal, Terse, TRUE, Terse, FALSE, FALSE, FALSE, ItemStates, lLocationStates};
+    Context lContext = {(HMODULE) NULL, NOWHERE, &lConnections, Female, GenderQualifiers, Twelve, Eight, Twelve, Eight, Twelve, Eight, Twelve, Eight, CONTEXT_NAME, Verbose, Normal, Terse, TRUE, Terse, FALSE, FALSE, FALSE, ItemStates, lLocationStates, (RoomStateHandle) NULL};
 
 	Tokens lCommandTokens;
 

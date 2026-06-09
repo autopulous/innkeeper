@@ -32,40 +32,64 @@ policies, either expressed or implied, of John L Hart IV.
 
 #include "state.h"
 
+/* the largest JSON image a location may serialize for a single visit */
+
+#define STATE_SERIALIZED_SIZE (size_t) 1024
+
 success CALLING_CONVENTION StateConstructor
 (
     Context * pContext,
     const char * pUUId,
     void ** pState,
-    success CALLING_CONVENTION pStateConstructor(void **)
+    success CALLING_CONVENTION pStateConstructor(void **),
+    success CALLING_CONVENTION pStateDeserializer(void **, const char *)
 )
 {
-    /* when state exists there's no need to construct it */
+    /* a live state is already active for this visit */
 
-    if (StateRetriever(pContext, pUUId, pState))
+    if (NULL != pContext->LocationState)
     {
+        *pState = pContext->LocationState;
+
         return (TRUE);
     }
 
-    /* use the callback function to create a default state */
-
     void * lState = NULL;
 
-    if (pStateConstructor(&lState))
+    /* rebuild from the durable JSON image when one exists */
+
+    if (SelectTreeNode(pContext->LocationStates, (void *) pUUId, 0))
+    {
+        char * lSerialized = NULL;
+
+        if (FetchTreeNode(pContext->LocationStates, &lSerialized, NULL, NULL) && NULL != lSerialized)
         {
-        /* save the state pointer in the state tree (cache) */
-
-        if (InsertTreeNode(pContext->LocationStates, &lState, (void *)pUUId))
+            if (!pStateDeserializer(&lState, lSerialized))
             {
-            *pState = lState;
+                *pState = NULL;
 
-                return (TRUE);
+                return (FALSE);
             }
         }
+    }
 
-    *pState = NULL;
+    /* otherwise build a default state */
 
-    return (FALSE);
+    if (NULL == lState)
+    {
+        if (!pStateConstructor(&lState))
+        {
+            *pState = NULL;
+
+            return (FALSE);
+        }
+    }
+
+    pContext->LocationState = lState;
+
+    *pState = lState;
+
+    return (TRUE);
 }
 
 success CALLING_CONVENTION StateRetriever
@@ -75,16 +99,13 @@ success CALLING_CONVENTION StateRetriever
     void ** pState
 )
 {
-    /* find the state in the cache */
+    /* return the active visit's live state (only one location is live at a time) */
 
-    if (SelectTreeNode(pContext->LocationStates, (void *) pUUId, 0))
+    if (NULL != pContext->LocationState)
     {
-        /* retrieve the state from the cache */
+        *pState = pContext->LocationState;
 
-        if (FetchTreeNode(pContext->LocationStates, pState, NULL, NULL))
-        {
-            return (TRUE);
-        }
+        return (TRUE);
     }
 
     *pState = NULL;
@@ -99,19 +120,89 @@ success CALLING_CONVENTION StateUpdater
     void ** pState
 )
 {
-    /* find the state in the cache */
+    /* the live state is mutated in place; the durable image is written on exit */
 
-    if (SelectTreeNode(pContext->LocationStates, (void *) pUUId, 0))
+    if (NULL != pContext->LocationState)
     {
-        /* alter the state in the cache */
+        *pState = pContext->LocationState;
 
-        if (UpdateTreeNode(pContext->LocationStates, pState))
-    {
-            return (TRUE);
-        }
+        return (TRUE);
     }
 
     *pState = NULL;
 
     return (FALSE);
+}
+
+success CALLING_CONVENTION StatePersist
+(
+    Context * pContext,
+    const char * pUUId,
+    success CALLING_CONVENTION pStateSerializer(void *, char *, size_t)
+)
+{
+    void * lState = pContext->LocationState;
+
+    /* nothing active to persist */
+
+    if (NULL == lState)
+    {
+        return (TRUE);
+    }
+
+    /* release engine ownership of the live slot up front (the caller frees lState) */
+
+    pContext->LocationState = NULL;
+
+    /* serialize the live state to its JSON image */
+
+    char lSerialized[STATE_SERIALIZED_SIZE];
+
+    if (!pStateSerializer(lState, lSerialized, sizeof(lSerialized)))
+    {
+        return (FALSE);
+    }
+
+    /* copy the image into an engine-owned heap block */
+
+    char * lImage = NULL;
+
+    if (!SafeMallocBlock((void **) &lImage, STATE_SERIALIZED_SIZE))
+    {
+        return (FALSE);
+    }
+
+    CopyString(lSerialized, lImage, STATE_SERIALIZED_SIZE);
+
+    /* store the image in the durable tree, replacing any prior image */
+
+    if (SelectTreeNode(pContext->LocationStates, (void *) pUUId, 0))
+    {
+        char * lPrevious = NULL;
+
+        FetchTreeNode(pContext->LocationStates, &lPrevious, NULL, NULL);
+
+        if (!UpdateTreeNode(pContext->LocationStates, &lImage))
+        {
+            SafeFreeBlock((void **) &lImage);
+
+            return (FALSE);
+        }
+
+        if (NULL != lPrevious)
+        {
+            SafeFreeBlock((void **) &lPrevious);
+        }
+
+        return (TRUE);
+    }
+
+    if (!InsertTreeNode(pContext->LocationStates, &lImage, (void *) pUUId))
+    {
+        SafeFreeBlock((void **) &lImage);
+
+        return (FALSE);
+    }
+
+    return (TRUE);
 }

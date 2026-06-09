@@ -39,12 +39,29 @@
 #ifndef STATE_I_H
 #define STATE_I_H
 
+/*----------------------------------------------------------------------------
+  StateConstructor()
+  ----------------------------------------------------------------------------
+  Make the calling location's state live for the current visit. When the
+  LocationStates tree already holds a serialized image for pUUId the image is
+  rebuilt with pStateDeserializer; otherwise pStateConstructor builds a default.
+  ----------------------------------------------------------------------------
+  Parameters:
+
+  pContext           - (I) execution context
+  pUUId              - (I) the location's object identifier (state tree key)
+  pState             - (O) receives the live state pointer
+  pStateConstructor  - (I) callback that builds a default state
+  pStateDeserializer - (I) callback that rebuilds a state from its JSON image
+  ----------------------------------------------------------------------------*/
+
 success CALLING_CONVENTION StateConstructor
 (
     Context * pContext,
     const char * pUUId,
     void ** pState,
-    success CALLING_CONVENTION Context(void **)
+    success CALLING_CONVENTION pStateConstructor(void **),
+    success CALLING_CONVENTION pStateDeserializer(void **, const char *)
 );
 
 success CALLING_CONVENTION StateRetriever
@@ -59,6 +76,28 @@ success CALLING_CONVENTION StateUpdater
     Context * pContext,
     const char * pUUId,
     void ** pState
+);
+
+/*----------------------------------------------------------------------------
+  StatePersist()
+  ----------------------------------------------------------------------------
+  Serialize the active visit's live state to its JSON image and store it
+  (engine owned) in the LocationStates tree keyed by pUUId, then release the
+  live slot. The caller frees the live state itself, because only the location
+  knows how to release any nested allocations the state holds.
+  ----------------------------------------------------------------------------
+  Parameters:
+
+  pContext         - (I) execution context
+  pUUId            - (I) the location's object identifier (state tree key)
+  pStateSerializer - (I) callback that writes the state's JSON image to a buffer
+  ----------------------------------------------------------------------------*/
+
+success CALLING_CONVENTION StatePersist
+(
+    Context * pContext,
+    const char * pUUId,
+    success CALLING_CONVENTION pStateSerializer(void *, char *, size_t)
 );
 
 #endif

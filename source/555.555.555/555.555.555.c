@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../xxx.yyy.zzz/xxx.yyy.zzz.i.h"
 
@@ -93,6 +94,74 @@ static success CALLING_CONVENTION _StateConstructor
     return (TRUE);
 }
 
+static success CALLING_CONVENTION _StateSerializer
+(
+    void * pState,
+    char * pSerialized,
+    size_t pSerializedSize
+)
+{
+    State * lState = (State *) pState;
+
+    snprintf(pSerialized, pSerializedSize, "{\"caseClosure\":%d,\"caseCondition\":%d}", (int) lState->caseClosure, (int) lState->caseCondition);
+
+    return (TRUE);
+}
+
+static const char * _ReadStateValue
+(
+    const char * pCursor,
+    long long * pValue
+)
+{
+    /* advance to the next decimal digit */
+
+    while (*CC_STRING_TERMINATOR != * pCursor && !IsDecimal(* pCursor))
+    {
+        pCursor++;
+    }
+
+    * pValue = atoll(pCursor);
+
+    /* advance past the digits just consumed */
+
+    while (IsDecimal(* pCursor))
+    {
+        pCursor++;
+    }
+
+    return (pCursor);
+}
+
+static success CALLING_CONVENTION _StateDeserializer
+(
+    void ** pState,
+    const char * pSerialized
+)
+{
+    /* build a default state, then restore the persisted values over it */
+
+    if (!_StateConstructor(pState))
+    {
+        return (FALSE);
+    }
+
+    State * lState = (State *) * pState;
+
+    long long lClosure = Opened;
+    long long lCondition = Ten;
+
+    const char * lCursor = pSerialized;
+
+    lCursor = _ReadStateValue(lCursor, &lClosure);
+    lCursor = _ReadStateValue(lCursor, &lCondition);
+
+    lState->caseClosure = (Closure) lClosure;
+    lState->caseCondition = (Level) lCondition;
+
+    return (TRUE);
+}
+
 /*---------------------------------------------------------------------------
   Interface functions
   ---------------------------------------------------------------------------*/
@@ -106,7 +175,7 @@ void CALLING_CONVENTION LocationConstructor
 
     State * lState;
 
-    StateConstructor(pContext, OBJECT_ID, (void **) &lState, _StateConstructor);
+    StateConstructor(pContext, OBJECT_ID, (void **) &lState, _StateConstructor, _StateDeserializer);
 
     LocationValidator(pContext);
 }
@@ -134,6 +203,17 @@ void CALLING_CONVENTION LocationDestructor
 )
 {
     if (pContext->Trace) printf(LOCATION_ID ".LocationDestructor()\n");
+
+    State * lState;
+
+    if (!StateRetriever(pContext, OBJECT_ID, (void **) &lState))
+    {
+        return;
+    }
+
+    StatePersist(pContext, OBJECT_ID, _StateSerializer);
+
+    SafeFreeBlock((void **) &lState);
 }
 
 void CALLING_CONVENTION LocationValidator

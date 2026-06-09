@@ -160,6 +160,8 @@ typedef struct Context
     /* Dungeon */
 
     motelTreeHandle LocationStates;
+
+    RoomStateHandle LocationState; /* the active visit's live room state; the LocationStates tree holds the durable per-UUID JSON image */
 } Context;
 
 #endif

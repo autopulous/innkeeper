@@ -8,3 +8,4 @@ EXPORTS
    StateConstructor
    StateRetriever
    StateUpdater
+   StatePersist
